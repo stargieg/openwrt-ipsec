@@ -458,14 +458,14 @@ config_connection() {
 	for ifc in $(ubus list network.interface.*) ; do 
 		[[ $ifc =~ network.interface.$local_ip.* ]] || continue
 		local GW
-		if ! ip -6 route get $gateway 2>&1 >/dev/null | grep -q Error
+		if ! ip -6 route get $gateway 2>&1 >/dev/null | grep -q Error ; then
 			eval $(ubus call $ifc status | jsonfilter -e 'IP=$["ipv6-address"][0].address')
 			if [ ! -z $IP ] ; then
 				local_ip="$IP"
 				eval $(ubus call $ifc status | jsonfilter -e 'GW=$["route"][0].nexthop')
 				local_gateway="$GW"
 			fi
-		elif ! ip -4 route get $gateway 2>&1 >/dev/null | grep -q Error
+		elif ! ip -4 route get $gateway 2>&1 >/dev/null | grep -q Error ; then
 			eval $(ubus call $ifc status | jsonfilter -e 'IP=$["ipv4-address"][0].address')
 			if [ ! -z $IP ] ; then
 				local_ip="$IP"
