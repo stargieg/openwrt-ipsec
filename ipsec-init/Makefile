@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ipsec-init
-PKG_RELEASE:=5
+PKG_RELEASE:=7
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
@@ -23,14 +23,14 @@ define Package/$(PKG_NAME)
   MENU:=1
   EXTRA_DEPENDS:=iptables-mod-ipsec, kmod-xfrm-interface, \
   kmod-crypto-sha512, xfrm, luci-proto-xfrm, \
-  strongswan, strongswan-charon, strongswan-pki, \
+  strongswan-charon, strongswan-pki, \
   strongswan-swanctl, \
-  strongswan-mod-des, strongswan-mod-eap-identity, \
+  strongswan-mod-eap-identity, \
   strongswan-mod-eap-mschapv2, strongswan-mod-kernel-netlink, \
   strongswan-mod-nonce, strongswan-mod-openssl, strongswan-mod-pem, \
-  strongswan-mod-socket-default, strongswan-mod-vici, \
-  strongswan-mod-x509, strongswan-mod-eap-md5, strongswan-mod-eap-tls, \
-  strongswan-mod-pkcs12, strongswan-mod-xauth-eap, strongswan-mod-updown
+  strongswan-mod-socket-default, \
+  strongswan-mod-x509, \
+  strongswan-mod-updown
 endef
 
 define Package/$(PKG_NAME)/conffiles
