@@ -739,6 +739,8 @@ start_service() {
 }
 
 boot() {
+	mkdir -p "$(dirname $STRONGSWAN_VAR_CONF_FILE)"
+	mkdir -p "$(dirname $SWANCTL_VAR_CONF_FILE)"
 	if [ ! -L /etc/swanctl/x509ca ] ; then
 		rm -rf /etc/swanctl/x509ca
 		ln -s /etc/ssl/certs /etc/swanctl/x509ca
