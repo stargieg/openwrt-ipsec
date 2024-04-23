@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ipsec-init
-PKG_RELEASE:=9
+PKG_RELEASE:=10
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
@@ -33,27 +33,7 @@ define Package/$(PKG_NAME)
   strongswan-mod-updown
 endef
 
-define Package/$(PKG_NAME)-6
-  $(call Package/ipsec-init/template)
-  MENU:=1
-  EXTRA_DEPENDS:=iptables-mod-ipsec, kmod-xfrm-interface, \
-  kmod-crypto-sha512, xfrm, \
-  strongswan-charon, strongswan-pki, \
-  strongswan-swanctl, \
-  strongswan-mod-eap-identity, \
-  strongswan-mod-eap-mschapv2, strongswan-mod-kernel-netlink, \
-  strongswan-mod-nonce, strongswan-mod-openssl, strongswan-mod-pem, \
-  strongswan-mod-socket-default, \
-  strongswan-mod-x509, \
-  strongswan-mod-updown
-endef
-
 define Package/$(PKG_NAME)/conffiles
-/etc/config/ipsec
-/etc/ipsec_updown.sh
-endef
-
-define Package/$(PKG_NAME)-6/conffiles
 /etc/config/ipsec
 /etc/ipsec_updown.sh
 endef
@@ -74,13 +54,4 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) files/ipsec_updown.sh $(1)/etc/ipsec_updown.sh
 endef
 
-define Package/$(PKG_NAME)-6/install
-	# $(INSTALL_DIR) $(1)/etc/config
-	# $(INSTALL_DATA) files/ipsec.config $(1)/etc/config/ipsec
-	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) files/ipsec.init.sh $(1)/etc/init.d/ipsec
-	$(INSTALL_BIN) files/ipsec_updown.sh $(1)/etc/ipsec_updown.sh
-endef
-
 $(eval $(call BuildPackage,ipsec-init))
-$(eval $(call BuildPackage,ipsec-init-6))
