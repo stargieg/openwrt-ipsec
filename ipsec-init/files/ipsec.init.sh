@@ -710,9 +710,9 @@ stop_service() {
 service_triggers() {
 	procd_add_reload_trigger "ipsec"
 	config load "ipsec"
-	#procd_add_raw_trigger "interface.*" 1000 /etc/init.d/swanctl restart
-	procd_add_interface_trigger "interface.*" wan /etc/init.d/swanctl restart
-	procd_add_interface_trigger "interface.*" wwan /etc/init.d/swanctl restart
+	procd_add_raw_trigger "interface.*" 1000 /etc/init.d/ipsec restart
+	#procd_add_interface_trigger "interface.*" wan /etc/init.d/ipsec restart
+	#procd_add_interface_trigger "interface.*" wwan /etc/init.d/ipsec restart
 }
 
 start_service() {
