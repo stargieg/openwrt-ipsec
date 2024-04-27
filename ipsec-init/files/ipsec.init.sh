@@ -750,10 +750,11 @@ boot() {
 	/etc/init.d/swanctl disable
 	#TODO
 	#uci del_list network.lan.ip6class="tunnel1prefix"
-	#interfaces=$(uci get ipsec.@ipsec[-1].interface)                                                                                          
-	#for interface in $interfaces ; do                                         
-	#	uci add_list network.lan.ip6class="$interface"                                                          
-	#done 
+	#interfaces=$(uci get ipsec.@ipsec[-1].interface)
+	#for interface in $interfaces ; do
+	#	uci del_list network.lan.ip6class="$interface"
+	#	uci add_list network.lan.ip6class="$interface"
+	#done
 	#uci commit network
 	( sleep 22 ; /etc/init.d/ipsec start ) &
 }

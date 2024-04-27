@@ -9,7 +9,10 @@ log "$PLUTO_VERB"
 case "$PLUTO_VERB:$1" in
     up-client-v6:)
         log "set ip6 class"
-        uci del_list network.lan.ip6class="wan_6"
+        interfaces=$(uci get ipsec.@ipsec[-1].interface)
+        for interface in $interfaces ; do
+            uci del_list network.lan.ip6class="$interface"
+        done
         uci add_list network.lan.ip6class="tunnel1prefix"
         uci commit network
         log "reload network"
@@ -28,7 +31,11 @@ case "$PLUTO_VERB:$1" in
     down-client-v6:)
         log "set ip6 class"
         uci del_list network.lan.ip6class="tunnel1prefix"
-        uci add_list network.lan.ip6class="wan_6"
+        interfaces=$(uci get ipsec.@ipsec[-1].interface)
+        for interface in $interfaces ; do
+            uci del_list network.lan.ip6class="$interface"
+            uci add_list network.lan.ip6class="$interface"
+        done
         uci commit network
         log "reload network"
         /etc/init.d/network reload
