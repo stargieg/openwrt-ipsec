@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ipsec-init
-PKG_RELEASE:=12
+PKG_RELEASE:=13
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
@@ -22,7 +22,8 @@ define Package/$(PKG_NAME)
   $(call Package/ipsec-init/template)
   MENU:=1
   EXTRA_DEPENDS:=iptables-mod-ipsec, kmod-xfrm-interface, \
-  kmod-crypto-sha512, xfrm, luci-proto-xfrm, \
+  kmod-crypto-sha256, kmod-crypto-sha512, \
+  xfrm, luci-proto-xfrm, \
   strongswan-charon, strongswan-pki, \
   strongswan-swanctl, \
   strongswan-mod-eap-identity, \

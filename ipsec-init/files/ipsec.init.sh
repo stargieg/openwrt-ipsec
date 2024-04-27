@@ -708,11 +708,13 @@ stop_service() {
 }
 
 service_triggers() {
+	#3s delay after ifup
+	PROCD_RELOAD_DELAY="3000"
 	procd_add_reload_trigger "ipsec"
-	config load "ipsec"
-	procd_add_raw_trigger "interface.*" 1000 /etc/init.d/ipsec restart
-	#procd_add_interface_trigger "interface.*" wan /etc/init.d/ipsec restart
-	#procd_add_interface_trigger "interface.*" wwan /etc/init.d/ipsec restart
+	interfaces=$(uci get ipsec.@ipsec[-1].interface)
+	for interface in $interfaces ; do
+		procd_add_interface_trigger "interface.*" "$interface" /etc/init.d/ipsec restart
+	done
 }
 
 start_service() {
@@ -748,6 +750,10 @@ boot() {
 	/etc/init.d/swanctl disable
 	#TODO
 	#uci del_list network.lan.ip6class="tunnel1prefix"
-	#uci add_list network.lan.ip6class="gsm_6"
+	#interfaces=$(uci get ipsec.@ipsec[-1].interface)                                                                                          
+	#for interface in $interfaces ; do                                         
+	#	uci add_list network.lan.ip6class="$interface"                                                          
+	#done 
 	#uci commit network
+	( sleep 22 ; /etc/init.d/ipsec start ) &
 }
