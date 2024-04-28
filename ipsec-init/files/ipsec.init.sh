@@ -756,5 +756,5 @@ boot() {
 	#	uci add_list network.lan.ip6class="$interface"
 	#done
 	#uci commit network
-	( sleep 22 ; /etc/init.d/ipsec start ) &
+	( sleep 60 ; /etc/init.d/ipsec start ) &
 }
