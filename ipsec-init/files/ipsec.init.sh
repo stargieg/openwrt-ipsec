@@ -8,6 +8,7 @@ PROG=/usr/lib/ipsec/charon
 
 . $IPKG_INSTROOT/lib/functions.sh
 . $IPKG_INSTROOT/lib/functions/network.sh
+. $IPKG_INSTROOT/usr/share/libubox/jshn.sh
 
 STRONGSWAN_CONF_FILE=/etc/strongswan.conf
 STRONGSWAN_VAR_CONF_FILE=/var/ipsec/strongswan.conf
@@ -459,10 +460,43 @@ config_connection() {
 		[[ $ifc =~ network.interface.$local_ip.* ]] || continue
 		local GW
 		if ! ip -6 route get $gateway 2>&1 >/dev/null | grep -q Error ; then
-			eval $(ubus call $ifc status | jsonfilter -e 'IP=$["ipv6-address"][0].address')
+			json_load "$(ubus call $ifc status)"
+			json_get_var up up
+			json_select "ipv6_address"
+			json_get_keys keys
+			local masklow=0
+			local IP
+			for key in $keys ; do
+				json_select $key
+				json_get_var preferred preferred 0
+				json_get_var mask mask
+				if [ $preferred -gt 0 -a $mask -gt $masklow ] ; then
+					masklow=$mask
+					json_get_var IP address
+					MASK=$mask
+				elif [ -z $IP ] ; then
+					masklow=$mask
+					json_get_var IP address
+					MASK=$mask
+				fi
+				json_select ..
+			done
+			json_select ..
+			json_select "route"
+			json_get_keys keys
+			for key in $keys ; do
+				json_select $key
+				json_get_var TARGET target
+				json_get_var SOURCE source
+				if [ "$TARGET" == "::" -a  "$SOURCE" == "$IP/$MASK" ] ; then
+						json_get_var GW nexthop
+				fi
+				json_select ..
+			done
+			json_select ..
+			json_cleanup
 			if [ ! -z $IP ] ; then
 				local_ip="$IP"
-				eval $(ubus call $ifc status | jsonfilter -e 'GW=$["route"][0].nexthop')
 				local_gateway="$GW"
 			fi
 		elif ! ip -4 route get $gateway 2>&1 >/dev/null | grep -q Error ; then
@@ -474,7 +508,6 @@ config_connection() {
 			fi
 		fi
 	done
-	[ -z $IP ] && local_ip="%any"
 
 	if [ -n "$local_key" ]; then
 		[ "$(dirname "$local_key")" != "." ] && \
