@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ipsec-init
-PKG_RELEASE:=18
+PKG_RELEASE:=19
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
@@ -32,6 +32,7 @@ define Package/$(PKG_NAME)
   strongswan-mod-openssl, strongswan-mod-pem, \
   strongswan-mod-socket-default, \
   strongswan-mod-x509, \
+  strongswan-mod-kdf, \
   strongswan-mod-updown
 endef
 
